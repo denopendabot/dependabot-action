@@ -18,6 +18,7 @@ COPY --from=base ./dist/ ./native-helpers
 COPY --from=base /usr/local/bin/node /usr/local/bin/node
 
 COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 ARG REPO_NAME
 ARG GITHUB_TOKEN
