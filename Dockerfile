@@ -10,7 +10,10 @@ WORKDIR /usr/action
 
 COPY Gemfile Gemfile.lock ./
 
-RUN gem install bundler && bundle install
+# RUN gem install bundler && bundle install
+
+RUN gem install dependabot-omnibus -v 0.228.0
+
 
 COPY src ./
 COPY --from=base ./dist/ ./native-helpers
@@ -31,4 +34,5 @@ ENV BRANCH=${BRANCH}
 ENV REGISTRY=${REGISTRY}
 ENV REGISTRY_TOKEN=${REGISTRY_TOKEN}
 
-CMD ["bundle", "exec", "ruby", "./update-script.rb"]
+# CMD ["bundle", "exec", "ruby", "./update-script.rb"]
+CMD ["ruby", "./update-script.rb"]
