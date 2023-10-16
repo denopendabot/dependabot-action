@@ -15,7 +15,7 @@ COPY Gemfile Gemfile.lock ./
 RUN gem install dependabot-omnibus -v 0.228.0
 
 
-COPY src ./
+COPY ./src/update-script.rb ./update-script.rb
 COPY --from=base ./dist/ ./native-helpers
 COPY --from=base /usr/local/bin/node /usr/local/bin/node
 
