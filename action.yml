@@ -1,6 +1,9 @@
 name: 'Dependabot Workflow Action'
 description: 'Run dependabot in your own github workflow'
 author: 'Gavin Meier <gavin.meier@sonos.com>'
+branding:
+  icon: refresh-ccw
+  color: gray-dark
 inputs:
   repo-name:
     description: 'The org and repo name conjoined (ex: "My-Cool-Org/my-repo")'
