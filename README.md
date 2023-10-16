@@ -35,7 +35,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: "Update versions"
-        uses: gavinmeiersonos/dependabot-action@v1
+        uses: GavinMeierSonos/dependabot-action@v1-beta
         with:
           repo-name: 'GavinMeierSonos/my-outdated-repo'
           github-token: ${{ secrets.MY_GITHUB_WRITE_TOKEN }}
