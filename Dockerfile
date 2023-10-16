@@ -8,13 +8,14 @@ FROM ruby:3.1.4-bullseye AS RUNNER
 
 WORKDIR /usr/action
 
-COPY Gemfile Gemfile
-COPY Gemfile.lock Gemfile.lock
-COPY src .
+COPY Gemfile Gemfile.lock ./
+
+RUN gem install bundler && bundle install
+
+COPY src ./
 COPY --from=base ./dist/ ./native-helpers
 COPY --from=base /usr/local/bin/node /usr/local/bin/node
 
-RUN bundle install
 
 ARG REPO_NAME
 ARG GITHUB_TOKEN
