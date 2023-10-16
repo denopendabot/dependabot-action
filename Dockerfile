@@ -17,7 +17,7 @@ COPY ./src/update-script.rb ./update-script.rb
 COPY --from=base ./dist/ ./native-helpers
 COPY --from=base /usr/local/bin/node /usr/local/bin/node
 
-COPY .ntrypoint.sh /entrypoint.sh
+COPY entrypoint.sh /entrypoint.sh
 
 ARG REPO_NAME
 ARG GITHUB_TOKEN
