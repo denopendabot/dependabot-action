@@ -33,9 +33,9 @@ credentials = [
   }
 ]
 
-maybe_more_creds = ENV['ADDITIONAL_REGISTRIES']
+maybe_more_creds = ENV['ADDITIONAL_REGISTRIES'] ? ENV['ADDITIONAL_REGISTRIES'] : ""
 
-if !maybe_more_creds.empty?
+if maybe_more_creds != ""
     more_creds_to_add = JSON.parse(maybe_more_creds)
     credentials << more_creds_to_add
 end
