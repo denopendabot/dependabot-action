@@ -1,0 +1,40 @@
+name: 'Dependabot Workflow Action'
+description: 'Run dependabot in your own github workflow'
+author: 'Gavin Meier <gavin.meier@sonos.com>'
+inputs:
+  repo-name:
+    description: 'The org and repo name conjoined (ex: "My-Cool-Org/my-repo")'
+    required: true
+  github-token:
+    description: "The jwt auth token needed to create and open up PRs in the repo"
+    required: true
+  directory:
+    description: "The directory in the repo to run the checks"
+    required: false
+    default: './'
+  branch:
+    description: "The branch to run the updates on and create the PR's against"
+    required: false
+    default: 'main'
+  registry:
+    description: "The registry to use with the registry token"
+    required: false
+    default: 'npm.pkg.github.com'
+  registry-token:
+    description: "The token that is used to auth into the registry supplied"
+    required: true
+  additional-registries:
+    description: "A string in json format for addition"
+    required: false
+    default: ""
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  env:
+    REPO_NAME: ${{ inputs.repo-name }}
+    GITHUB_TOKEN: ${{ inputs.github-token }}
+    DIRECTORY: ${{ inputs.directory }}
+    BRANCH: ${{ inputs.branch }}
+    REGISTRY: ${{ inputs.registry }}
+    REGISTRY_TOKEN: ${{ inputs.registry-token }}
+    ADDITIONAL_REGISTRIES: ${{inputs.additional-registries }}
