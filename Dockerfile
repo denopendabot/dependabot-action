@@ -34,6 +34,8 @@ ENV BRANCH=${BRANCH}
 ENV REGISTRY=${REGISTRY}
 ENV REGISTRY_TOKEN=${REGISTRY_TOKEN}
 
+RUN chmod +x /update-script.rb
+RUN ls
 # CMD ["bundle", "exec", "ruby", "./update-script.rb"]
 # CMD ["ruby", "./update-script.rb"]
-ENTRYPOINT [ "/entrypoint.sh" ]
+ENTRYPOINT [ "ruby", "/update-script.rb" ]
