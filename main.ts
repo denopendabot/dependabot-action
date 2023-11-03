@@ -22,7 +22,8 @@ import * as github from "@actions/github";
 import * as tc from "@actions/tool-cache";
 import { $ } from "execa";
 
-const version = "1.39.0+1";
+// const version = "1.39.0+1";
+const version = "1.39.0";
 let found = tc.find("denopendabot+dependabot", version);
 if (!found) {
   const file = {
