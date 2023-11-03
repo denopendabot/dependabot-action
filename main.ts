@@ -14,7 +14,7 @@ if [ ! -d "$bun_install" ]; then
     exit 1
   fi
 fi
-exec "$bun_install/bin/bun" run -A "$0" "$@"
+exec "$bun_install/bin/bun" "$0" "$@"
 # */
 
 import * as core from "@actions/core";
