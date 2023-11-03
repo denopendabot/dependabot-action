@@ -34,12 +34,14 @@ if (!found) {
   let extracted: string;
   if (file.endsWith(".zip")) {
     const zip = await tc.downloadTool(
-      `https://github.com/denopendabot/cli/releases/download/v${version}/${file}`
+      // `https://github.com/denopendabot/cli/releases/download/v${version}/${file}`
+      `https://github.com/dependabot/cli/releases/download/v${version}/${file}`
     );
     extracted = await tc.extractZip(zip);
   } else {
     const tar = await tc.downloadTool(
-      `https://github.com/denopendabot/cli/releases/download/v${version}/${file}`
+      // `https://github.com/denopendabot/cli/releases/download/v${version}/${file}`
+      `https://github.com/dependabot/cli/releases/download/v${version}/${file}`
     );
     extracted = await tc.extractTar(tar);
   }
