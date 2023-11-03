@@ -1,34 +1,26 @@
 /*/ 2> /dev/null
 set -e
-deno_version='1.38.0'
+bun_version='1.38.0'
 case $RUNNER_ARCH in
   X86) arch=ia32 ;;
   X64) arch=x64 ;;
   ARM) arch=arm ;;
   ARM64) arch=arm64 ;;
 esac
-deno_install="$RUNNER_TOOL_CACHE/deno/$version/$arch"
-if [ ! -d "$deno_install" ]; then
-  if ! o=$(curl -fsSL https://deno.land/x/install/install.sh | DENO_INSTALL="$deno_install" sh -s "v$deno_version" 2>&1); then
+bun_install="$RUNNER_TOOL_CACHE/bun/$version/$arch"
+if [ ! -d "$bun_install" ]; then
+  if ! o=$(curl -fsSL https://bun.sh/install | BUN_INSTALL="$bun_install" bash -s "bun-v$bun_version" 2>&1); then
     echo "$o" >&2
     exit 1
   fi
 fi
-exec "$deno_install/bin/deno" run -A "$0" "$@"
+exec "$bun_install/bin/bun" run -A "$0" "$@"
 # */
 
-import * as core from "npm:@actions/core";
-import * as github from "npm:@actions/github";
-import * as tc from "npm:@actions/tool-cache";
-import { $ } from "npm:execa";
-import process from "node:process";
-
-// Hack to get 'http.globalAgent' to work in @actions/http-client
-// https://github.com/denoland/deno/issues/18312
-// https://github.com/denoland/deno/issues/21080
-import http from "node:http";
-import https from "node:https";
-http.globalAgent = https.globalAgent;
+import * as core from "@actions/core";
+import * as github from "@actions/github";
+import * as tc from "@actions/tool-cache";
+import { $ } from "execa";
 
 const version = "1.39.0+1";
 let found = tc.find("denopendabot+dependabot", version);
