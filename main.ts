@@ -1,6 +1,6 @@
 /*/ 2> /dev/null
 set -e
-bun_version='1.38.0'
+bun_version='1.0.8'
 case $RUNNER_ARCH in
   X86) arch=ia32 ;;
   X64) arch=x64 ;;
