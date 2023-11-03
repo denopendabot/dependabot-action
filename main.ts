@@ -23,6 +23,13 @@ import * as tc from "npm:@actions/tool-cache";
 import { $ } from "npm:execa";
 import process from "node:process";
 
+// Hack to get 'http.globalAgent' to work in @actions/http-client
+// https://github.com/denoland/deno/issues/18312
+// https://github.com/denoland/deno/issues/21080
+import http from "node:http";
+import https from "node:https";
+http.globalAgent = https.globalAgent;
+
 const version = "1.39.0+1";
 let found = tc.find("denopendabot+dependabot", version);
 if (!found) {
