@@ -43,7 +43,7 @@ job:
   source:
     provider: github
     repo: ${github.context.repo.owner}/${github.context.repo.repo}
-    directory: /test/
+    directory: /test-npm
     commit: ${github.context.sha}
 `;
 await writeFile(jobPath, job);
