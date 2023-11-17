@@ -2,6 +2,8 @@ import * as core from "@actions/core";
 import * as github from "@actions/github";
 import * as tc from "@actions/tool-cache";
 import { $ } from "execa";
+import { writeFile } from "node:fs/promises";
+import { join } from "node:path";
 
 // const version = "1.39.0+1";
 const version = "1.39.0";
@@ -29,5 +31,24 @@ if (!found) {
   }
   found = await tc.cacheDir(extracted, "denopendabot+dependabot", version);
 }
-await $({ stdio: "inherit" })`tree ${found}`;
-// const dependabot = `${found}/dependabot`;
+const dependabot = `${found}/dependabot`;
+
+const jobPath = join(process.env.RUNNER_TEMP!, "job.yaml");
+const job = `\
+# job.yaml
+job:
+  package-manager: npm_and_yarn
+  allowed-updates:
+    - update-type: all
+  source:
+    provider: github
+    repo: ${github.context.repo.owner}/${github.context.repo.repo}
+    directory: /test/
+    commit: ${github.context.sha}
+`;
+await writeFile(jobPath, job);
+
+const $i = $({ stdio: "inherit" });
+
+await $i`${dependabot} --version`;
+await $i`${dependabot} update --file ${jobPath}`;
