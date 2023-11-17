@@ -38,6 +38,7 @@ const $i = $({ stdio: "inherit" });
 const tempdir = join(process.env.RUNNER_TEMP!, "denopendabot");
 await mkdir(tempdir, { recursive: true });
 process.chdir(tempdir);
+await $i`gh auth setup-git`;
 await $i`gh repo clone ${github.context.repo.owner}/${github.context.repo.repo} .`;
 await $i`git checkout ${github.context.sha}`;
 
