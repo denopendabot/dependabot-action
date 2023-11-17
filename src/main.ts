@@ -35,6 +35,7 @@ if (!found) {
 const dependabot = `${found}/dependabot`;
 
 process.env.LOCAL_GITHUB_ACCESS_TOKEN = core.getInput("token");
+process.env.GITHUB_TOKEN = core.getInput("token");
 const $i = $({ stdio: "inherit" });
 
 const jobPath = join(process.env.RUNNER_TEMP!, "job.yaml");
