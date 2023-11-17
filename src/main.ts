@@ -325,7 +325,7 @@ try {
   console.error(it.stderr);
 } catch (error) {
   // if unauthorized due to bad token config, try to create an issue instead
-  if (/unauthorized|403/i.test(error.stderr)) {
+  if (/unauthorized|403|pull request create failed/i.test(error.stderr)) {
     console.error(
       "looks like token is bad or something. did you remember to let github actions bot create prs in settings? attempting to create an issue instead."
     );
