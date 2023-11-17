@@ -317,34 +317,39 @@ await $i`git add --all`;
 await $i`git commit -m ${pullrequest.expect.data["commit-message"]}`;
 await $i`git push origin HEAD:${branch} --force --set-upstream`;
 
-let { "pr-title": title, "pr-body": body } = pullrequest.expect.data;
-try {
-  const it =
-    await $`gh pr create --title ${title} --body ${body} --head ${branch} --base main`;
-  console.log(it.stdout);
-  console.error(it.stderr);
-} catch (error) {
-  // if unauthorized due to bad token config, try to create an issue instead
-  if (/unauthorized|403|pull request create failed/i.test(error.stderr)) {
-    console.error(
-      "looks like token is bad or something. did you remember to let github actions bot create prs in settings? attempting to create an issue instead."
-    );
-    console.error(error.stdout);
-    console.error(error.stderr);
+console.log(branch);
+console.log(
+  `https://github.com/${github.context.repo.owner}/${github.context.repo.repo}/tree/${branch}`
+);
 
-    body =
-      "🛑 could not create pull request\n" +
-      `branch is https://github.com/${github.context.repo.owner}/${github.context.repo.repo}/tree/${branch}\n` +
-      `quick create pr link: ${`https://github.com/${
-        github.context.repo.owner
-      }/${
-        github.context.repo.repo
-      }/compare/main...${branch}?quick_pull=1&title=${title}&body=${encodeURIComponent(
-        body
-      )}`}\n\n`;
-    body;
-    await $i`gh issue create --title ${title} --body ${body}`;
-  } else {
-    throw error;
-  }
-}
+// let { "pr-title": title, "pr-body": body } = pullrequest.expect.data;
+// try {
+//   const it =
+//     await $`gh pr create --title ${title} --body ${body} --head ${branch} --base main`;
+//   console.log(it.stdout);
+//   console.error(it.stderr);
+// } catch (error) {
+//   // if unauthorized due to bad token config, try to create an issue instead
+//   if (/unauthorized|403|pull request create failed/i.test(error.stderr)) {
+//     console.error(
+//       "looks like token is bad or something. did you remember to let github actions bot create prs in settings? attempting to create an issue instead."
+//     );
+//     console.error(error.stdout);
+//     console.error(error.stderr);
+
+//     body =
+//       "🛑 could not create pull request\n" +
+//       `branch is https://github.com/${github.context.repo.owner}/${github.context.repo.repo}/tree/${branch}\n` +
+//       `quick create pr link: ${`https://github.com/${
+//         github.context.repo.owner
+//       }/${
+//         github.context.repo.repo
+//       }/compare/main...${branch}?quick_pull=1&title=${title}&body=${encodeURIComponent(
+//         body
+//       )}`}\n\n`;
+//     body;
+//     await $i`gh issue create --title ${title} --body ${body}`;
+//   } else {
+//     throw error;
+//   }
+// }
