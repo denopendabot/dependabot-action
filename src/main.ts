@@ -2,12 +2,11 @@ import * as core from "@actions/core";
 import * as github from "@actions/github";
 import * as tc from "@actions/tool-cache";
 import { $ } from "execa";
-import { readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import * as YAML from "yaml";
 
-// const version = "1.39.0+1";
-const version = "1.39.0";
+const version = "1.40.0+1";
 let found = tc.find("denopendabot+dependabot", version);
 if (!found) {
   const file = {
@@ -19,14 +18,12 @@ if (!found) {
   let extracted: string;
   if (file.endsWith(".zip")) {
     const zip = await tc.downloadTool(
-      // `https://github.com/denopendabot/cli/releases/download/v${version}/${file}`
-      `https://github.com/dependabot/cli/releases/download/v${version}/${file}`
+      `https://github.com/denopendabot/cli/releases/download/v${version}/${file}`
     );
     extracted = await tc.extractZip(zip);
   } else {
     const tar = await tc.downloadTool(
-      // `https://github.com/denopendabot/cli/releases/download/v${version}/${file}`
-      `https://github.com/dependabot/cli/releases/download/v${version}/${file}`
+      `https://github.com/denopendabot/cli/releases/download/v${version}/${file}`
     );
     extracted = await tc.extractTar(tar);
   }
@@ -37,6 +34,12 @@ const dependabot = `${found}/dependabot`;
 process.env.LOCAL_GITHUB_ACCESS_TOKEN = core.getInput("token");
 process.env.GITHUB_TOKEN = core.getInput("token");
 const $i = $({ stdio: "inherit" });
+
+const tempdir = join(process.env.RUNNER_TEMP!, "denopendabot");
+await mkdir(tempdir, { recursive: true });
+process.chdir(tempdir);
+await $i`gh repo clone ${github.context.repo.owner}/${github.context.repo.repo} .`;
+await $i`git checkout ${github.context.sha}`;
 
 const jobPath = join(process.env.RUNNER_TEMP!, "job.yaml");
 const job = `\
@@ -302,15 +305,16 @@ for (const file of pullrequest.expect.data["updated-dependency-files"]) {
   }
 }
 
-process.env.GIT_AUTHOR_NAME = "denopendabot[bot]";
-process.env.GIT_AUTHOR_EMAIL = "denopendabot[bot]@users.noreply.github.com";
-process.env.GIT_COMMITTER_NAME = "denopendabot[bot]";
-process.env.GIT_COMMITTER_EMAIL = "denopendabot[bot]@users.noreply.github.com";
+process.env.GIT_AUTHOR_NAME = "github-actions[bot]";
+process.env.GIT_AUTHOR_EMAIL = "github-actions[bot]@users.noreply.github.com";
+process.env.GIT_COMMITTER_NAME = "github-actions[bot]";
+process.env.GIT_COMMITTER_EMAIL =
+  "github-actions[bot]@users.noreply.github.com";
 const branch = `denopendabot/${Math.random().toString(36).slice(2)}`;
 await $i`git checkout -b ${branch}`;
 await $i`git add --all`;
 await $i`git commit -m ${pullrequest.expect.data["commit-message"]}`;
-await $i`git push origin ${branch} --force --set-upstream`;
+await $i`git push origin HEAD:${branch} --force --set-upstream`;
 
 let { "pr-title": title, "pr-body": body } = pullrequest.expect.data;
 try {
@@ -320,17 +324,24 @@ try {
   console.error(it.stderr);
 } catch (error) {
   // if unauthorized due to bad token config, try to create an issue instead
-  if (/unauthorized/i.test(error.stderr)) {
+  if (/unauthorized|403/i.test(error.stderr)) {
     console.error(
-      "looks like token is bad or something. attempting to create an issue instead."
+      "looks like token is bad or something. did you remember to let github actions bot create prs in settings? attempting to create an issue instead."
     );
     console.error(error.stdout);
     console.error(error.stderr);
 
     body =
       "🛑 could not create pull request\n" +
-      `branch is https://github.com/${github.context.repo.owner}/${github.context.repo.repo}/tree/${branch}\n\n` +
-      body;
+      `branch is https://github.com/${github.context.repo.owner}/${github.context.repo.repo}/tree/${branch}\n` +
+      `quick create pr link: ${`https://github.com/${
+        github.context.repo.owner
+      }/${
+        github.context.repo.repo
+      }/compare/main...${branch}?quick_pull=1&title=${title}&body=${encodeURIComponent(
+        body
+      )}`}\n\n`;
+    body;
     await $i`gh issue create --title ${title} --body ${body}`;
   } else {
     throw error;
