@@ -1,4 +1,4 @@
-name: Test
+name: Test action
 on:
   push:
     branches: "main"
@@ -7,14 +7,14 @@ on:
       - LICENSE
       - README.md
       - .github/**
-      - "!.github/workflows/test.yml"
+      - "!.github/workflows/test-action.yml"
   pull_request:
     paths-ignore:
       - .gitignore
       - LICENSE
       - README.md
       - .github/**
-      - "!.github/workflows/test.yml"
+      - "!.github/workflows/test-action.yml"
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -27,4 +27,13 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-      - uses: ./
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm install
+      - run: npm run build
+      - id: main
+        uses: ./
+      - shell: jq -C . {0}
+        run: ${{ toJSON(steps.main.outputs) }}

@@ -1,22 +1,3 @@
-/*/ 2> /dev/null
-set -e
-bun_version='1.0.8'
-case $RUNNER_ARCH in
-  X86) arch=ia32 ;;
-  X64) arch=x64 ;;
-  ARM) arch=arm ;;
-  ARM64) arch=arm64 ;;
-esac
-bun_install="$RUNNER_TOOL_CACHE/bun/$version/$arch"
-if [ ! -d "$bun_install" ]; then
-  if ! o=$(curl -fsSL https://bun.sh/install | BUN_INSTALL="$bun_install" bash -s "bun-v$bun_version" 2>&1); then
-    echo "$o" >&2
-    exit 1
-  fi
-fi
-exec "$bun_install/bin/bun" "$0" "$@"
-# */
-
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 import * as tc from "@actions/tool-cache";
