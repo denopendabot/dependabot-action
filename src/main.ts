@@ -18,7 +18,7 @@ const workspace = join(process.env.RUNNER_TEMP!, "denopendabot-workspace");
 await mkdir(workspace, { recursive: true });
 process.chdir(workspace);
 
-const dependabot = (async () => {
+const dependabot = await (async () => {
   const version = "1.40.0";
   let found = tc.find("denopendabot_cli", version);
   if (!found) {
@@ -85,7 +85,7 @@ async function runJob(job: any) {
   return output;
 }
 
-const output = (async () => {
+const output = await (async () => {
   const denopendabot = await loadDenopendabot();
   console.log("denopendabot", denopendabot);
   const job = createJob(denopendabot);
