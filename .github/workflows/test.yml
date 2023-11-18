@@ -7,6 +7,7 @@ on:
       - LICENSE
       - README.md
       - .github/**
+      - "!.github/workflows/denopendabot.yml"
       - "!.github/workflows/test-action.yml"
   pull_request:
     paths-ignore:
@@ -14,6 +15,7 @@ on:
       - LICENSE
       - README.md
       - .github/**
+      - "!.github/workflows/denopendabot.yml"
       - "!.github/workflows/test-action.yml"
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
