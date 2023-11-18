@@ -9,6 +9,7 @@ import dedent from "./dedent.js";
 
 const $i = $({ stdio: "inherit" });
 const token = core.getInput("token");
+const githubServerURL = core.getInput("github-server-url");
 const repository = core.getInput("repository");
 const sha = core.getInput("sha");
 process.env.GITHUB_TOKEN = token; // gh
@@ -49,7 +50,7 @@ const dependabot = (async () => {
 
 checkout: {
   await $i`gh auth setup-git`;
-  await $i`git clone ${githubServerURL}/${repository}`;
+  await $i`git clone ${githubServerURL}/${repository}.git`;
   await $i`git checkout ${github.context.sha}`;
 }
 
