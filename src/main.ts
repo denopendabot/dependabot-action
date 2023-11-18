@@ -47,11 +47,9 @@ const dependabot = (async () => {
   return dependabot;
 })();
 
-checkout: {
-  await $i`gh auth setup-git`;
-  await $i`git clone https://github.com/${repository}.git`;
-  await $i`git checkout ${github.context.sha}`;
-}
+await $i`gh auth setup-git`;
+await $i`git clone https://github.com/${repository}.git .`;
+await $i`git checkout ${github.context.sha}`;
 
 const yaml = (strings, ...inserts) =>
   YAML.parse(dedent(strings, ...inserts.map((x) => JSON.stringify(x))));
