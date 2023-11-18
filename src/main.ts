@@ -55,7 +55,9 @@ const yaml = (strings, ...inserts) =>
   YAML.parse(dedent(strings, ...inserts.map((x) => JSON.stringify(x))));
 
 async function loadDenopendabot() {
-  const denopendabot = YAML.parse(await readFile(".github/denopendabot.yml"));
+  const denopendabot = YAML.parse(
+    await readFile(".github/denopendabot.yml", "utf8")
+  );
   // assert()
   return denopendabot;
 }
