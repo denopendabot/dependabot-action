@@ -1,6 +1,8 @@
 inputs:
   token:
     default: ${{ github.token }}
+  repository:
+    default: ${{ github.repository }}
 
 runs:
   using: node20

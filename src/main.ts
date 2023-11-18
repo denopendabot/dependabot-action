@@ -33,13 +33,14 @@ const dependabot = `${found}/dependabot`;
 
 process.env.LOCAL_GITHUB_ACCESS_TOKEN = core.getInput("token");
 process.env.GITHUB_TOKEN = core.getInput("token");
+const repo = core.getInput("repository")
 const $i = $({ stdio: "inherit" });
 
 const tempdir = join(process.env.RUNNER_TEMP!, "denopendabot-workspace");
 await mkdir(tempdir, { recursive: true });
 process.chdir(tempdir);
 await $i`gh auth setup-git`;
-await $i`gh repo clone ${github.context.repo.owner}/${github.context.repo.repo} .`;
+await $i`gh repo clone ${repo} .`;
 await $i`git checkout ${github.context.sha}`;
 
 const jobPath = join(process.env.RUNNER_TEMP!, "job.yaml");
@@ -51,7 +52,7 @@ job:
     - update-type: all
   source:
     provider: github
-    repo: ${github.context.repo.owner}/${github.context.repo.repo}
+    repo: ${repo}
     directory: /test
     commit: ${github.context.sha}
 `;
