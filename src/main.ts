@@ -87,8 +87,12 @@ async function runJob(job: any) {
 
 const output = (async () => {
   const denopendabot = await loadDenopendabot();
+  console.log("denopendabot", denopendabot);
   const job = createJob(denopendabot);
-  return await runJob(job);
+  console.log("job", job);
+  const output = await runJob(job);
+  console.log("output", output);
+  return output;
 })();
 
 async function createPullRequest(data: any) {
