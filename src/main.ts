@@ -6,8 +6,8 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import * as YAML from "yaml";
 
-const version = "1.40.0+1";
-let found = tc.find("denopendabot+dependabot", version);
+const version = "1.40.0";
+let found = tc.find("denopendabot_cli", version);
 if (!found) {
   const file = {
     "darwin,arm64": `dependabot-v${version}-darwin-arm64.tar.gz`,
@@ -27,7 +27,7 @@ if (!found) {
     );
     extracted = await tc.extractTar(tar);
   }
-  found = await tc.cacheDir(extracted, "denopendabot+dependabot", version);
+  found = await tc.cacheDir(extracted, "denopendabot_cli", version);
 }
 const dependabot = `${found}/dependabot`;
 
@@ -35,7 +35,7 @@ process.env.LOCAL_GITHUB_ACCESS_TOKEN = core.getInput("token");
 process.env.GITHUB_TOKEN = core.getInput("token");
 const $i = $({ stdio: "inherit" });
 
-const tempdir = join(process.env.RUNNER_TEMP!, "denopendabot");
+const tempdir = join(process.env.RUNNER_TEMP!, "denopendabot-workspace");
 await mkdir(tempdir, { recursive: true });
 process.chdir(tempdir);
 await $i`gh auth setup-git`;
@@ -46,13 +46,13 @@ const jobPath = join(process.env.RUNNER_TEMP!, "job.yaml");
 const job = `\
 # job.yaml
 job:
-  package-manager: npm_and_yarn
+  package-manager: deno
   allowed-updates:
     - update-type: all
   source:
     provider: github
     repo: ${github.context.repo.owner}/${github.context.repo.repo}
-    directory: /test-npm
+    directory: /test
     commit: ${github.context.sha}
 `;
 await writeFile(jobPath, job);
