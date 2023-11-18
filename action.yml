@@ -3,6 +3,8 @@ inputs:
     default: ${{ github.token }}
   repository:
     default: ${{ github.repository }}
+  sha:
+    default: ${{ github.sha }}
 
 runs:
   using: node20
