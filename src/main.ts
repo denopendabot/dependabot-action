@@ -93,7 +93,8 @@ const output = await (async () => {
   const job = createJob(denopendabot);
   console.log("job", job);
   const output = await runJob(job);
-  console.log("output", output);
+  console.log("output:");
+  console.dir(output, { depth: null });
   return output;
 })();
 
@@ -124,7 +125,7 @@ async function createPullRequest(data: any) {
   process.env.GIT_COMMITTER_NAME = "github-actions[bot]";
   process.env.GIT_COMMITTER_EMAIL =
     "github-actions[bot]@users.noreply.github.com";
-  await $i`git commit --message ${pullrequest.expect.data["commit-message"]}`;
+  await $i`git commit --message ${data["commit-message"]}`;
 
   await $i`git push origin HEAD:${branch} --force --set-upstream`;
 
